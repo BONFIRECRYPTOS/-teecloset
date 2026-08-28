@@ -11,6 +11,7 @@ import { AvailabilityBadge } from '@/components/product/AvailabilityBadge'
 import { WishlistButton } from '@/components/product/WishlistButton'
 import { ProductCard } from '@/components/product/ProductCard'
 import { Button } from '@/components/ui/Button'
+import { Seo } from '@/components/seo/Seo'
 import { NotFound } from './NotFound'
 
 export function ProductDetail() {
@@ -27,6 +28,28 @@ export function ProductDetail() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
+      <Seo
+        title={product.name}
+        description={product.description}
+        image={product.images[0]}
+        structuredData={{
+          '@context': 'https://schema.org',
+          '@type': 'Product',
+          name: product.name,
+          description: product.description,
+          offers: {
+            '@type': 'Offer',
+            priceCurrency: 'KES',
+            price: product.priceKsh,
+            availability:
+              product.availability === 'in-stock'
+                ? 'https://schema.org/InStock'
+                : product.availability === 'limited'
+                  ? 'https://schema.org/LimitedAvailability'
+                  : 'https://schema.org/SoldOut',
+          },
+        }}
+      />
       <div className="grid gap-10 md:grid-cols-2">
         <ProductGallery images={product.images} alt={product.name} />
 

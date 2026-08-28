@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button'
 import { FilterPanel } from '@/components/shop/FilterPanel'
 import { SortSelect } from '@/components/shop/SortSelect'
 import { ActiveFilterChips } from '@/components/shop/ActiveFilterChips'
+import { Seo } from '@/components/seo/Seo'
 
 function parseFilters(params: URLSearchParams): ProductFilters {
   const category = params.get('category') as Category | null
@@ -43,6 +44,10 @@ export function Shop() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
+      <Seo
+        title="Shop All"
+        description="Browse Tee Closet's full catalogue — wide-leg pants, blazers, tops, official pants, chinos and palazzo pants. Filter by size, category and availability."
+      />
       <h1 className="font-display text-3xl text-espresso">Shop All</h1>
       <p className="mt-1 text-sm text-fg-muted">
         {products.length} piece{products.length === 1 ? '' : 's'}
