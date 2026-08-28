@@ -10,6 +10,6 @@ describe('App', () => {
         <App />
       </MemoryRouter>,
     )
-    expect(screen.getByText(/tee closet/i)).toBeInTheDocument()
+    expect(screen.getAllByText(/tee closet/i).length).toBeGreaterThan(0)
   })
 })
