@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+:root {
+  /* ---- Primitives (exact brand spec — do not alter) ---- */
+  --color-espresso: #171513;
+  --color-champagne: #B89A72;
+  --color-cream: #F7F3ED;
+  --color-ivory: #FFFCF7;
+  --color-taupe: #8C7A68;
+  --color-mocha: #3A3028;
+  --color-sand: #DED3C4;
+
+  /* ---- Semantic ---- */
+  --color-bg: var(--color-cream);
+  --color-surface: var(--color-ivory);
+  --color-fg: var(--color-espresso);
+  --color-fg-muted: var(--color-taupe);
+  --color-border: var(--color-sand);
+  --color-accent: var(--color-champagne);
+  --color-accent-fg: var(--color-espresso);
+  --color-inverse-bg: var(--color-mocha);
+  --color-inverse-fg: var(--color-ivory);
+
+  --font-display: 'Playfair Display', ui-serif, Georgia, serif;
+  --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+}
+
+/* ---- Map semantic tokens into Tailwind's utility namespace ---- */
+@theme inline {
+  --color-espresso: var(--color-espresso);
+  --color-champagne: var(--color-champagne);
+  --color-cream: var(--color-cream);
+  --color-ivory: var(--color-ivory);
+  --color-taupe: var(--color-taupe);
+  --color-mocha: var(--color-mocha);
+  --color-sand: var(--color-sand);
+
+  --color-bg: var(--color-bg);
+  --color-surface: var(--color-surface);
+  --color-fg: var(--color-fg);
+  --color-fg-muted: var(--color-fg-muted);
+  --color-border: var(--color-border);
+  --color-accent: var(--color-accent);
+  --color-accent-fg: var(--color-accent-fg);
+  --color-inverse-bg: var(--color-inverse-bg);
+  --color-inverse-fg: var(--color-inverse-fg);
+
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+}
