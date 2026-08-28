@@ -1,9 +1,12 @@
+/// <reference types="node" />
+
 import { describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 
-// Note: import.meta.url is not a valid file:// URL in this Vitest+jsdom setup,
-// causing "The URL must be of scheme file" error, so we use import.meta.dirname instead.
+// Use Node APIs only in this test file to read tokens.css as raw text.
+// ?raw imports don't work with CSS in this Vite+Tailwind setup (CSS pipeline
+// transforms the file before ?raw can extract it), so we read the file directly.
 const css = readFileSync(join(import.meta.dirname, './tokens.css'), 'utf-8')
 
 describe('brand tokens', () => {
