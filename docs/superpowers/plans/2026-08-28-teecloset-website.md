@@ -1856,7 +1856,7 @@ describe('ProductCard', () => {
         <ProductCard product={product} />
       </MemoryRouter>,
     )
-    expect(screen.getByRole('link', { name: /espresso tailored blazer/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'Espresso Tailored Blazer' })).toHaveAttribute(
       'href',
       '/product/espresso-tailored-blazer',
     )
