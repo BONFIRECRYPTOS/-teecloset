@@ -1,10 +1,9 @@
-/// <reference types="vitest" />
-/// <vitest-environment node>
-
 import { describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 
+// Note: import.meta.url is not a valid file:// URL in this Vitest+jsdom setup,
+// causing "The URL must be of scheme file" error, so we use import.meta.dirname instead.
 const css = readFileSync(join(import.meta.dirname, './tokens.css'), 'utf-8')
 
 describe('brand tokens', () => {
