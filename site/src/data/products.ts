@@ -36,7 +36,7 @@ const PRODUCTS: Product[] = [
     id: 'p04', slug: 'sand-wide-leg-linen-trousers', name: 'Sand Wide-Leg Linen Trousers',
     category: 'wide-leg', priceKsh: 2900, sizes: [28, 30, 32, 34, 36, 38, 40], colors: ['Sand', 'White'],
     availability: 'in-stock', isNew: false, isFeatured: false,
-    description: "Breathable linen-blend wide-legs in warm sand, built for Nairobi's sunny days.",
+    description: "Breathable linen-blend wide-legs in warm sand, built for Kenya's sunny days.",
     stylingNote: 'Style with a fitted tank and slides for an easy daytime look.',
     images: WIDE_LEG_IMAGES,
   },

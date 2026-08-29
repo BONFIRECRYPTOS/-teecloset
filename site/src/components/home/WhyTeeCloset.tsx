@@ -1,6 +1,6 @@
 const REASONS = [
   { title: 'Tailored Quality', body: 'Every piece is chosen for fit, fabric and finish — fashion that actually lasts.' },
-  { title: 'Kenyan-Made for You', body: 'Sizes 26–40, styled for real Nairobi life — from the office to a night out.' },
+  { title: 'Made for You', body: 'Sizes 26–40, styled for real life in Kenya — from the office to a night out.' },
   { title: 'Shop on WhatsApp', body: 'No accounts, no forms. Message us and we sort you out directly.' },
   { title: 'Limited Drops', body: 'Many pieces are one-off — when it is gone, a new favourite takes its place.' },
 ]

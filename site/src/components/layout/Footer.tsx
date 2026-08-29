@@ -12,7 +12,7 @@ export function Footer() {
         <nav className="flex flex-col gap-2 text-sm" aria-label="Footer">
           <Link to="/" className="hover:text-champagne">Home</Link>
           <Link to="/shop" className="hover:text-champagne">Shop</Link>
-          <a href="#visit-store" className="hover:text-champagne">Visit Us</a>
+          <Link to="/#visit-store" className="hover:text-champagne">Visit Us</Link>
         </nav>
         <div className="flex flex-col gap-2 text-sm">
           <a href={TIKTOK_URL} target="_blank" rel="noreferrer" className="hover:text-champagne">

@@ -16,9 +16,9 @@ export function Header() {
           <Link to="/shop" className="text-sm font-medium text-espresso hover:text-mocha">
             Shop
           </Link>
-          <a href="#visit-store" className="text-sm font-medium text-espresso hover:text-mocha">
+          <Link to="/#visit-store" className="text-sm font-medium text-espresso hover:text-mocha">
             Visit Us
-          </a>
+          </Link>
         </nav>
         <a
           href={buildGeneralWhatsAppLink()}

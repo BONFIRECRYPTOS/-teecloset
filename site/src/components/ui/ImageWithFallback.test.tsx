@@ -15,6 +15,19 @@ describe('ImageWithFallback', () => {
     expect(screen.getByRole('img', { name: 'A missing product' })).toHaveTextContent('TC')
   })
 
+  it('resets the fallback state when src changes, so a working image renders again', () => {
+    const { container, rerender } = render(<ImageWithFallback src="/products/missing.jpg" alt="A product" />)
+    const failingImg = screen.getByRole('img', { name: 'A product' })
+    fireEvent.error(failingImg)
+    expect(screen.getByRole('img', { name: 'A product' })).toHaveTextContent('TC')
+
+    rerender(<ImageWithFallback src="/products/real.jpg" alt="A product" />)
+
+    const img = container.querySelector('img')
+    expect(img).not.toBeNull()
+    expect(img).toHaveAttribute('src', '/products/real.jpg')
+  })
+
   it('renders a presentational placeholder (no img role) when alt is empty and the image fails', () => {
     const { container } = render(<ImageWithFallback src="/products/missing.jpg" alt="" />)
     const img = container.querySelector('img')

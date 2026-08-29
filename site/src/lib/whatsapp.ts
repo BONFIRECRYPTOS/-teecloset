@@ -1,7 +1,6 @@
 import type { Product, Size } from '@/data/types'
 import { formatKsh } from './format'
-
-const WHATSAPP_NUMBER = '254714713575'
+import { WHATSAPP_NUMBER } from './constants'
 
 export function buildWhatsAppOrderLink(product: Product, pageUrl: string, size?: Size): string {
   const lines = [

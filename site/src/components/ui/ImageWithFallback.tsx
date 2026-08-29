@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { cn } from '@/lib/cn'
 
 interface ImageWithFallbackProps {
@@ -9,6 +9,8 @@ interface ImageWithFallbackProps {
 
 export function ImageWithFallback({ src, alt, className }: ImageWithFallbackProps) {
   const [failed, setFailed] = useState(false)
+
+  useEffect(() => setFailed(false), [src])
 
   if (failed) {
     const isDecorative = alt === ''

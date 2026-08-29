@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import { Hero } from '@/components/home/Hero'
 import { NewStockStrip } from '@/components/home/NewStockStrip'
 import { CategoryGrid } from '@/components/home/CategoryGrid'
@@ -9,6 +11,13 @@ import { WhatsAppBand } from '@/components/home/WhatsAppBand'
 import { Seo } from '@/components/seo/Seo'
 
 export function Home() {
+  const location = useLocation()
+
+  useEffect(() => {
+    if (!location.hash) return
+    document.getElementById(location.hash.slice(1))?.scrollIntoView({ behavior: 'smooth' })
+  }, [location.hash])
+
   return (
     <>
       <Seo
