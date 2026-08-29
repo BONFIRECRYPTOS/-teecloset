@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "test": "vitest run",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "seed": "tsx scripts/seed-supabase.ts"
   },
   "dependencies": {
     "@fontsource/inter": "^5.3.0",
@@ -33,6 +34,7 @@
     "jsdom": "^29.1.1",
     "oxlint": "^1.79.0",
     "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.12",
     "typescript": "~6.0.2",
     "vite": "^8.2.2",
     "vitest": "^4.1.11"
