@@ -45,7 +45,7 @@ export function FilterPanel({ filters, onChange, isOpen, onClose }: FilterPanelP
             <button
               type="button"
               onClick={() => onChange({ ...filters, category: undefined })}
-              className="mt-1 self-start text-xs text-champagne underline"
+              className="mt-1 self-start text-xs text-mocha underline"
             >
               Clear category
             </button>
@@ -62,7 +62,7 @@ export function FilterPanel({ filters, onChange, isOpen, onClose }: FilterPanelP
                 aria-pressed={filters.size === size}
                 onClick={() => onChange({ ...filters, size: filters.size === size ? undefined : size })}
                 className={cn(
-                  'h-9 w-9 rounded-full border text-sm',
+                  'h-11 w-11 rounded-full border text-sm',
                   filters.size === size ? 'border-espresso bg-espresso text-ivory' : 'border-sand text-espresso',
                 )}
               >
@@ -89,7 +89,7 @@ export function FilterPanel({ filters, onChange, isOpen, onClose }: FilterPanelP
             <button
               type="button"
               onClick={() => onChange({ ...filters, availability: undefined })}
-              className="mt-1 self-start text-xs text-champagne underline"
+              className="mt-1 self-start text-xs text-mocha underline"
             >
               Clear availability
             </button>

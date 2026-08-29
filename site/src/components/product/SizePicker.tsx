@@ -17,7 +17,7 @@ export function SizePicker({ sizes, selected, onSelect }: SizePickerProps) {
           aria-pressed={selected === size}
           onClick={() => onSelect(size)}
           className={cn(
-            'h-10 w-10 rounded-full border text-sm font-medium transition-colors',
+            'h-11 w-11 rounded-full border text-sm font-medium transition-colors',
             selected === size
               ? 'border-espresso bg-espresso text-ivory'
               : 'border-sand text-espresso hover:border-espresso',

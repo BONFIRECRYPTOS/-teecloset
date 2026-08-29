@@ -11,10 +11,12 @@ export function ImageWithFallback({ src, alt, className }: ImageWithFallbackProp
   const [failed, setFailed] = useState(false)
 
   if (failed) {
+    const isDecorative = alt === ''
     return (
       <div
-        role="img"
-        aria-label={alt}
+        role={isDecorative ? undefined : 'img'}
+        aria-label={isDecorative ? undefined : alt}
+        aria-hidden={isDecorative ? 'true' : undefined}
         className={cn(
           'flex items-center justify-center bg-gradient-to-br from-sand to-cream text-espresso/30',
           className,

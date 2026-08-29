@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Button } from '@/components/ui/Button'
+import { buttonClassName } from '@/components/ui/buttonStyles'
 import { BRAND_TAGLINE, buildGeneralWhatsAppLink } from '@/lib/constants'
 
 export function Hero() {
@@ -20,13 +20,16 @@ export function Hero() {
           Premium wide-legs, blazers, tops and more — new stock dropping regularly, straight to your WhatsApp.
         </p>
         <div className="flex flex-wrap gap-3">
-          <Link to="/shop">
-            <Button variant="secondary">Shop New Stock</Button>
+          <Link to="/shop" className={buttonClassName('secondary')}>
+            Shop New Stock
           </Link>
-          <a href={buildGeneralWhatsAppLink()} target="_blank" rel="noreferrer">
-            <Button variant="ghost" className="border-ivory/40 text-ivory hover:bg-ivory/10">
-              Chat on WhatsApp
-            </Button>
+          <a
+            href={buildGeneralWhatsAppLink()}
+            target="_blank"
+            rel="noreferrer"
+            className={buttonClassName('ghost', 'border-ivory/40 text-ivory hover:bg-ivory/10')}
+          >
+            Chat on WhatsApp
           </a>
         </div>
       </div>

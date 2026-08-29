@@ -15,7 +15,7 @@ export function WishlistButton({ productId }: { productId: string }) {
       aria-pressed={isWishlisted}
       aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
       className={cn(
-        'flex h-9 w-9 items-center justify-center rounded-full bg-ivory/90 text-espresso shadow',
+        'flex h-11 w-11 items-center justify-center rounded-full bg-ivory/90 text-espresso shadow',
         isWishlisted && 'text-champagne',
       )}
     >

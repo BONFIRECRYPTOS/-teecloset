@@ -12,7 +12,11 @@
   --color-bg: var(--color-cream);
   --color-surface: var(--color-ivory);
   --color-fg: var(--color-espresso);
-  --color-fg-muted: var(--color-taupe);
+  /* Darkened from --color-taupe (#8C7A68) to meet WCAG AA 4.5:1 body-text
+     contrast on --color-cream/--color-ivory (taupe itself only reaches
+     ~3.7-4.0:1). The taupe primitive above is left untouched per the
+     "exact brand spec" note; only this semantic mapping changes. */
+  --color-fg-muted: #726455;
   --color-border: var(--color-sand);
   --color-accent: var(--color-champagne);
   --color-accent-fg: var(--color-espresso);

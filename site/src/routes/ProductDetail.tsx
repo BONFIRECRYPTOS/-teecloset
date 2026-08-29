@@ -11,6 +11,7 @@ import { AvailabilityBadge } from '@/components/product/AvailabilityBadge'
 import { WishlistButton } from '@/components/product/WishlistButton'
 import { ProductCard } from '@/components/product/ProductCard'
 import { Button } from '@/components/ui/Button'
+import { buttonClassName } from '@/components/ui/buttonStyles'
 import { Seo } from '@/components/seo/Seo'
 import { NotFound } from './NotFound'
 
@@ -78,8 +79,13 @@ export function ProductDetail() {
           </div>
 
           {isOrderable ? (
-            <a href={whatsAppLink} target="_blank" rel="noreferrer" className="mt-6 block">
-              <Button className="w-full">Order on WhatsApp</Button>
+            <a
+              href={whatsAppLink}
+              target="_blank"
+              rel="noreferrer"
+              className={buttonClassName('primary', 'mt-6 w-full')}
+            >
+              Order on WhatsApp
             </a>
           ) : (
             <Button className="mt-6 w-full" disabled>

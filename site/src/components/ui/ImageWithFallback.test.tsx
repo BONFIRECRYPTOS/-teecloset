@@ -14,4 +14,17 @@ describe('ImageWithFallback', () => {
     fireEvent.error(img)
     expect(screen.getByRole('img', { name: 'A missing product' })).toHaveTextContent('TC')
   })
+
+  it('renders a presentational placeholder (no img role) when alt is empty and the image fails', () => {
+    const { container } = render(<ImageWithFallback src="/products/missing.jpg" alt="" />)
+    const img = container.querySelector('img')
+    expect(img).not.toBeNull()
+    fireEvent.error(img as HTMLImageElement)
+
+    expect(screen.queryByRole('img')).not.toBeInTheDocument()
+    const fallback = container.querySelector('div')
+    expect(fallback).toHaveAttribute('aria-hidden', 'true')
+    expect(fallback).not.toHaveAttribute('aria-label')
+    expect(fallback).toHaveTextContent('TC')
+  })
 })

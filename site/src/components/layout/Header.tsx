@@ -10,13 +10,13 @@ export function Header() {
           <span className="font-display text-lg font-semibold text-espresso">Tee Closet</span>
         </Link>
         <nav className="hidden items-center gap-8 md:flex" aria-label="Primary">
-          <Link to="/" className="text-sm font-medium text-espresso hover:text-champagne">
+          <Link to="/" className="text-sm font-medium text-espresso hover:text-mocha">
             Home
           </Link>
-          <Link to="/shop" className="text-sm font-medium text-espresso hover:text-champagne">
+          <Link to="/shop" className="text-sm font-medium text-espresso hover:text-mocha">
             Shop
           </Link>
-          <a href="#visit-store" className="text-sm font-medium text-espresso hover:text-champagne">
+          <a href="#visit-store" className="text-sm font-medium text-espresso hover:text-mocha">
             Visit Us
           </a>
         </nav>

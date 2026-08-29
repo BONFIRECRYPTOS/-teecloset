@@ -16,4 +16,19 @@ describe('Seo', () => {
     const script = document.querySelector('script[type="application/ld+json"]')
     expect(script?.textContent).toContain('"@type":"Product"')
   })
+
+  it('sets og:image when an image is provided', () => {
+    render(<Seo title="Blazer" description="A blazer." image="/products/blazer.jpg" />)
+    expect(document.querySelector('meta[property="og:image"]')?.getAttribute('content')).toBe(
+      '/products/blazer.jpg',
+    )
+  })
+
+  it('clears a stale og:image left by a previous page when no image is provided', () => {
+    const { rerender } = render(<Seo title="Blazer" description="A blazer." image="/products/blazer.jpg" />)
+    expect(document.querySelector('meta[property="og:image"]')).not.toBeNull()
+
+    rerender(<Seo title="Shop" description="Shop Tee Closet pieces." />)
+    expect(document.querySelector('meta[property="og:image"]')).toBeNull()
+  })
 })

@@ -25,7 +25,11 @@ export function Seo({ title, description, image, structuredData }: SeoProps) {
     upsertMeta('property', 'og:title', fullTitle)
     upsertMeta('property', 'og:description', description)
     upsertMeta('property', 'og:type', 'website')
-    if (image) upsertMeta('property', 'og:image', image)
+    if (image) {
+      upsertMeta('property', 'og:image', image)
+    } else {
+      document.head.querySelector<HTMLMetaElement>('meta[property="og:image"]')?.remove()
+    }
 
     let script: HTMLScriptElement | null = null
     if (structuredData) {
