@@ -34,7 +34,7 @@ create table products (
   id uuid primary key default gen_random_uuid(),
   slug text unique not null,
   name text not null,
-  category_id uuid not null references categories(id),
+  category text not null,
   price_ksh int not null,
   sizes int[] not null,
   colors text[] not null default '{}',
