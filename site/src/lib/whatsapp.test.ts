@@ -7,7 +7,7 @@ describe('buildWhatsAppOrderLink', () => {
     const product = getProductBySlug('espresso-tailored-blazer')!
     const link = buildWhatsAppOrderLink(product, 'https://teecloset.example/product/espresso-tailored-blazer')
 
-    expect(link).toMatch(/^https:\/\/wa\.me\/254714713575\?text=/)
+    expect(link).toMatch(/^https:\/\/wa\.me\/254714743575\?text=/)
 
     const decoded = decodeURIComponent(link.split('text=')[1])
     expect(decoded).toContain('Espresso Tailored Blazer')

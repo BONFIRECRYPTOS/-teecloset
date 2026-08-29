@@ -14,7 +14,7 @@ describe('Header', () => {
     expect(screen.getByRole('link', { name: /shop/i })).toHaveAttribute('href', '/shop')
     expect(screen.getByRole('link', { name: /chat on whatsapp/i })).toHaveAttribute(
       'href',
-      expect.stringContaining('wa.me/254714713575'),
+      expect.stringContaining('wa.me/254714743575'),
     )
   })
 })

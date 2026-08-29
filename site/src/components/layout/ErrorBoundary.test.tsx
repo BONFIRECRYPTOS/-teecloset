@@ -17,7 +17,7 @@ describe('ErrorBoundary', () => {
     expect(screen.getByText(/something went wrong/i)).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /message us on whatsapp/i })).toHaveAttribute(
       'href',
-      expect.stringContaining('wa.me/254714713575'),
+      expect.stringContaining('wa.me/254714743575'),
     )
     consoleError.mockRestore()
   })

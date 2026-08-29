@@ -1,4 +1,4 @@
-export const WHATSAPP_NUMBER = '254714713575'
+export const WHATSAPP_NUMBER = '254714743575'
 export const TIKTOK_URL = 'https://www.tiktok.com/@tee_closet019?_r=1&_t=ZS-99GNq7SwXGW'
 export const TIKTOK_HANDLE = '@tee_closet019'
 export const MAPS_URL = 'https://maps.app.goo.gl/j4b4PoMoxZLZ4mRu9?g_st=ac'

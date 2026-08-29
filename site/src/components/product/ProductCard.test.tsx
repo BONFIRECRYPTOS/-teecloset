@@ -29,7 +29,7 @@ describe('ProductCard', () => {
       </MemoryRouter>,
     )
     const link = screen.getByRole('link', { name: /order espresso tailored blazer on whatsapp/i })
-    expect(link).toHaveAttribute('href', expect.stringContaining('wa.me/254714713575'))
+    expect(link).toHaveAttribute('href', expect.stringContaining('wa.me/254714743575'))
     const decoded = decodeURIComponent(link.getAttribute('href')!.split('text=')[1])
     expect(decoded).toContain('Espresso Tailored Blazer')
     expect(decoded).toContain('KSh 3,500')
