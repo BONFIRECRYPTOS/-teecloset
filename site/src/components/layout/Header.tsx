@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { buildGeneralWhatsAppLink } from '@/lib/constants'
+import { CartButton } from '@/components/cart/CartButton'
 
 export function Header() {
   return (
@@ -20,14 +21,17 @@ export function Header() {
             Visit Us
           </Link>
         </nav>
-        <a
-          href={buildGeneralWhatsAppLink()}
-          target="_blank"
-          rel="noreferrer"
-          className="hidden rounded-full bg-espresso px-5 py-2 text-sm font-medium text-ivory hover:bg-mocha md:inline-flex"
-        >
-          Chat on WhatsApp
-        </a>
+        <div className="flex items-center gap-2">
+          <CartButton />
+          <a
+            href={buildGeneralWhatsAppLink()}
+            target="_blank"
+            rel="noreferrer"
+            className="hidden rounded-full bg-espresso px-5 py-2 text-sm font-medium text-ivory hover:bg-mocha md:inline-flex"
+          >
+            Chat on WhatsApp
+          </a>
+        </div>
       </div>
     </header>
   )

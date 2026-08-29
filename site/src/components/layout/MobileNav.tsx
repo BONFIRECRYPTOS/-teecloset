@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { buildGeneralWhatsAppLink } from '@/lib/constants'
+import { CartButton } from '@/components/cart/CartButton'
 
 export function MobileNav() {
   return (
@@ -19,6 +20,7 @@ export function MobileNav() {
       >
         Shop
       </Link>
+      <CartButton />
       <a
         href={buildGeneralWhatsAppLink()}
         target="_blank"

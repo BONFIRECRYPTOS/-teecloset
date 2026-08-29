@@ -10,6 +10,7 @@ import { SizePicker } from '@/components/product/SizePicker'
 import { AvailabilityBadge } from '@/components/product/AvailabilityBadge'
 import { WishlistButton } from '@/components/product/WishlistButton'
 import { ProductCard } from '@/components/product/ProductCard'
+import { AddToCartButton } from '@/components/cart/AddToCartButton'
 import { Button } from '@/components/ui/Button'
 import { buttonClassName } from '@/components/ui/buttonStyles'
 import { Seo } from '@/components/seo/Seo'
@@ -79,14 +80,17 @@ export function ProductDetail() {
           </div>
 
           {isOrderable ? (
-            <a
-              href={whatsAppLink}
-              target="_blank"
-              rel="noreferrer"
-              className={buttonClassName('primary', 'mt-6 w-full')}
-            >
-              Order on WhatsApp
-            </a>
+            <>
+              <a
+                href={whatsAppLink}
+                target="_blank"
+                rel="noreferrer"
+                className={buttonClassName('primary', 'mt-6 w-full')}
+              >
+                Order on WhatsApp
+              </a>
+              <AddToCartButton product={product} variant="inline" selectedSize={selectedSize} />
+            </>
           ) : (
             <Button className="mt-6 w-full" disabled>
               Sold Out

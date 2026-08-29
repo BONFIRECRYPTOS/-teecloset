@@ -4,6 +4,7 @@ import { Footer } from './Footer'
 import { MobileNav } from './MobileNav'
 import { WhatsAppFloatingCTA } from './WhatsAppFloatingCTA'
 import { ErrorBoundary } from './ErrorBoundary'
+import { CartDrawer } from '@/components/cart/CartDrawer'
 
 export function Layout() {
   const location = useLocation()
@@ -19,6 +20,7 @@ export function Layout() {
       <Footer />
       <MobileNav />
       <WhatsAppFloatingCTA />
+      <CartDrawer />
     </div>
   )
 }

@@ -5,6 +5,7 @@ import { getCategoryLabel } from '@/data/categories'
 import { buildWhatsAppOrderLink } from '@/lib/whatsapp'
 import { Badge } from '@/components/ui/Badge'
 import { ImageWithFallback } from '@/components/ui/ImageWithFallback'
+import { AddToCartButton } from '@/components/cart/AddToCartButton'
 import { AvailabilityBadge } from './AvailabilityBadge'
 import { WishlistButton } from './WishlistButton'
 
@@ -43,6 +44,7 @@ export function ProductCard({ product }: { product: Product }) {
 
       <div className="absolute right-2 top-2 flex flex-col gap-2">
         <WishlistButton productId={product.id} />
+        {product.availability !== 'sold' && <AddToCartButton product={product} />}
         {product.availability !== 'sold' && (
           <a
             href={buildWhatsAppOrderLink(product, productUrl)}
