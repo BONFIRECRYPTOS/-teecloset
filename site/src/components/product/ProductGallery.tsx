@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { cn } from '@/lib/cn'
+import { ImageWithFallback } from '@/components/ui/ImageWithFallback'
 
 export function ProductGallery({ images, alt }: { images: string[]; alt: string }) {
   const [active, setActive] = useState(0)
@@ -7,7 +8,7 @@ export function ProductGallery({ images, alt }: { images: string[]; alt: string 
   return (
     <div>
       <div className="aspect-[3/4] overflow-hidden rounded-lg bg-sand/40">
-        <img src={images[active]} alt={alt} className="h-full w-full object-cover" />
+        <ImageWithFallback src={images[active]} alt={alt} className="h-full w-full object-cover" />
       </div>
       {images.length > 1 && (
         <div className="mt-3 flex gap-2">
@@ -23,7 +24,7 @@ export function ProductGallery({ images, alt }: { images: string[]; alt: string 
                 active === i ? 'border-espresso' : 'border-sand',
               )}
             >
-              <img src={src} alt="" className="h-full w-full object-cover" />
+              <ImageWithFallback src={src} alt="" className="h-full w-full object-cover" />
             </button>
           ))}
         </div>

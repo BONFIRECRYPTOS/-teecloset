@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { CATEGORIES } from '@/data/categories'
 import { getProducts } from '@/data/products'
+import { ImageWithFallback } from '@/components/ui/ImageWithFallback'
 
 export function CategoryGrid() {
   return (
@@ -16,7 +17,7 @@ export function CategoryGrid() {
               className="group relative aspect-square overflow-hidden rounded-lg bg-sand/40"
             >
               {cover && (
-                <img
+                <ImageWithFallback
                   src={cover}
                   alt=""
                   className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"

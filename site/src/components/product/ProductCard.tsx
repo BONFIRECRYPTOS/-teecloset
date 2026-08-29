@@ -4,6 +4,7 @@ import { formatKsh } from '@/lib/format'
 import { getCategoryLabel } from '@/data/categories'
 import { buildWhatsAppOrderLink } from '@/lib/whatsapp'
 import { Badge } from '@/components/ui/Badge'
+import { ImageWithFallback } from '@/components/ui/ImageWithFallback'
 import { AvailabilityBadge } from './AvailabilityBadge'
 import { WishlistButton } from './WishlistButton'
 
@@ -17,10 +18,9 @@ export function ProductCard({ product }: { product: Product }) {
     <div className="group relative">
       <Link to={`/product/${product.slug}`} aria-label={product.name} className="block">
         <div className="relative aspect-[3/4] overflow-hidden rounded-lg bg-sand/40">
-          <img
+          <ImageWithFallback
             src={product.images[0]}
             alt={product.name}
-            loading="lazy"
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
           {product.isNew && (
