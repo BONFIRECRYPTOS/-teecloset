@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
-import { readFileSync } from 'node:fs'
+import { readFileSync, existsSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, resolve } from 'node:path'
 
@@ -82,6 +82,10 @@ async function uploadImages(): Promise<Record<string, string>> {
   const urls: Record<string, string> = {}
   for (const file of IMAGE_FILES) {
     const filePath = resolve(__dirname, '../public/products', file)
+    if (!existsSync(filePath)) {
+      console.warn(`Skipping missing file: ${file}`)
+      continue
+    }
     const buffer = readFileSync(filePath)
     const storagePath = `seed/${file}`
     const { error } = await supabase.storage
@@ -132,12 +136,21 @@ async function seed() {
     if (prodError) throw prodError
 
     const [img1, img2] = CATEGORY_IMAGES[product.category]
-    await supabase.from('product_images').delete().eq('product_id', inserted.id)
-    const { error: imgError } = await supabase.from('product_images').insert([
-      { product_id: inserted.id, url: imageUrls[img1], sort_order: 0 },
-      { product_id: inserted.id, url: imageUrls[img2], sort_order: 1 },
-    ])
-    if (imgError) throw imgError
+    const { error: delError } = await supabase.from('product_images').delete().eq('product_id', inserted.id)
+    if (delError) throw delError
+
+    const imagesToInsert = []
+    if (imageUrls[img1]) {
+      imagesToInsert.push({ product_id: inserted.id, url: imageUrls[img1], sort_order: 0 })
+    }
+    if (imageUrls[img2]) {
+      imagesToInsert.push({ product_id: inserted.id, url: imageUrls[img2], sort_order: imagesToInsert.length })
+    }
+
+    if (imagesToInsert.length > 0) {
+      const { error: imgError } = await supabase.from('product_images').insert(imagesToInsert)
+      if (imgError) throw imgError
+    }
   }
 
   console.log(`Done. Seeded ${CATEGORIES.length} categories and ${PRODUCTS.length} products.`)
