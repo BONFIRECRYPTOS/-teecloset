@@ -2,10 +2,24 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useCartStore } from '@/lib/cartStore'
-import { getProductBySlug } from '@/data/products'
+import type { Product } from '@/data/types'
 import { AddToCartButton } from './AddToCartButton'
 
-const product = getProductBySlug('espresso-tailored-blazer')!
+const product: Product = {
+  id: 'p05',
+  slug: 'espresso-tailored-blazer',
+  name: 'Espresso Tailored Blazer',
+  category: 'blazers',
+  priceKsh: 3500,
+  sizes: [30, 32, 34, 36, 38],
+  colors: ['Espresso Black'],
+  availability: 'in-stock',
+  isNew: true,
+  isFeatured: true,
+  description: 'A sharply tailored espresso blazer that instantly elevates any outfit.',
+  stylingNote: 'Wear open over a simple tee and jeans, or buttoned for the boardroom.',
+  images: ['/products/blazers-1.jpg', '/products/blazers-2.jpg'],
+}
 
 describe('AddToCartButton', () => {
   beforeEach(() => {

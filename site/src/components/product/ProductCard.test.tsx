@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import { getProductBySlug } from '@/data/products'
+import type { Product } from '@/data/types'
 import { supabase } from '@/lib/supabaseClient'
 import { QueryWrapper } from '@/test/queryWrapper'
 import { ProductCard } from './ProductCard'
@@ -16,10 +16,26 @@ function mockCategories(data: { id: string; slug: string; label: string; sort_or
   ;(supabase.from as ReturnType<typeof vi.fn>).mockReturnValue({ select })
 }
 
+const mockProduct: Product = {
+  id: 'p05',
+  slug: 'espresso-tailored-blazer',
+  name: 'Espresso Tailored Blazer',
+  category: 'blazers',
+  priceKsh: 3500,
+  sizes: [30, 32, 34, 36, 38],
+  colors: ['Espresso Black'],
+  availability: 'in-stock',
+  isNew: true,
+  isFeatured: true,
+  description: 'A sharply tailored espresso blazer that instantly elevates any outfit.',
+  stylingNote: 'Wear open over a simple tee and jeans, or buttoned for the boardroom.',
+  images: ['/products/blazers-1.jpg', '/products/blazers-2.jpg'],
+}
+
 describe('ProductCard', () => {
   it('links to the product detail page and shows name, price and availability', async () => {
     mockCategories([{ id: '1', slug: 'blazers', label: 'Blazers', sort_order: 1 }])
-    const product = getProductBySlug('espresso-tailored-blazer')!
+    const product = mockProduct
     render(
       <MemoryRouter>
         <ProductCard product={product} />
@@ -38,7 +54,7 @@ describe('ProductCard', () => {
 
   it('includes a WhatsApp quick-order link with product name and price', async () => {
     mockCategories([{ id: '1', slug: 'blazers', label: 'Blazers', sort_order: 1 }])
-    const product = getProductBySlug('espresso-tailored-blazer')!
+    const product = mockProduct
     render(
       <MemoryRouter>
         <ProductCard product={product} />

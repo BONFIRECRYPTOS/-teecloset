@@ -1,10 +1,42 @@
 import { describe, expect, it } from 'vitest'
 import { buildWhatsAppOrderLink, buildCartOrderLink } from './whatsapp'
-import { getProductBySlug } from '@/data/products'
+import type { Product } from '@/data/types'
+
+const blazerProduct: Product = {
+  id: 'p05',
+  slug: 'espresso-tailored-blazer',
+  name: 'Espresso Tailored Blazer',
+  category: 'blazers',
+  priceKsh: 3500,
+  sizes: [30, 32, 34, 36, 38],
+  colors: ['Espresso Black'],
+  availability: 'in-stock',
+  isNew: true,
+  isFeatured: true,
+  description: 'A sharply tailored espresso blazer that instantly elevates any outfit.',
+  stylingNote: 'Wear open over a simple tee and jeans, or buttoned for the boardroom.',
+  images: ['/products/blazers-1.jpg', '/products/blazers-2.jpg'],
+}
+
+const topProduct: Product = {
+  id: 'p09',
+  slug: 'ivory-wrap-top',
+  name: 'Ivory Wrap Top',
+  category: 'tops',
+  priceKsh: 1200,
+  sizes: [26, 28, 30, 32, 34],
+  colors: ['Ivory'],
+  availability: 'in-stock',
+  isNew: true,
+  isFeatured: true,
+  description: 'A soft ivory wrap top that ties at the waist for an adjustable, flattering fit.',
+  stylingNote: 'Tuck into wide-legs or palazzo pants for a polished silhouette.',
+  images: ['/products/tops-1.jpg', '/products/tops-2.jpg'],
+}
 
 describe('buildWhatsAppOrderLink', () => {
   it('builds a wa.me link with product name, price and page url', () => {
-    const product = getProductBySlug('espresso-tailored-blazer')!
+    const product = blazerProduct
     const link = buildWhatsAppOrderLink(product, 'https://teecloset.example/product/espresso-tailored-blazer')
 
     expect(link).toMatch(/^https:\/\/wa\.me\/254714743575\?text=/)
@@ -17,7 +49,7 @@ describe('buildWhatsAppOrderLink', () => {
   })
 
   it('includes the size when provided', () => {
-    const product = getProductBySlug('espresso-tailored-blazer')!
+    const product = blazerProduct
     const link = buildWhatsAppOrderLink(
       product,
       'https://teecloset.example/product/espresso-tailored-blazer',
@@ -30,8 +62,8 @@ describe('buildWhatsAppOrderLink', () => {
 
 describe('buildCartOrderLink', () => {
   it('builds one message listing every line with size, quantity, price and a total', () => {
-    const blazer = getProductBySlug('espresso-tailored-blazer')!
-    const top = getProductBySlug('ivory-wrap-top')!
+    const blazer = blazerProduct
+    const top = topProduct
     const link = buildCartOrderLink(
       [
         { product: blazer, size: 34, quantity: 1 },
