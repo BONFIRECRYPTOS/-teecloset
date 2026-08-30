@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { supabase } from '@/lib/supabaseClient'
 import { QueryWrapper } from '@/test/queryWrapper'
@@ -9,21 +9,44 @@ vi.mock('@/lib/supabaseClient', () => ({
   supabase: { from: vi.fn() },
 }))
 
-function mockCategories() {
-  const order = vi.fn().mockResolvedValue({
-    data: [
-      { id: '1', slug: 'blazers', label: 'Blazers', sort_order: 1 },
-      { id: '2', slug: 'palazzo', label: 'Palazzo Pants', sort_order: 2 },
-    ],
-    error: null,
+const testProductRows = [
+  {
+    id: 'p1',
+    slug: 'test-blazer',
+    name: 'Test Blazer',
+    category: 'blazers',
+    price_ksh: 3500,
+    sizes: [30, 32, 34],
+    colors: ['Black'],
+    availability: 'in-stock',
+    is_new: true,
+    is_featured: false,
+    description: 'A test blazer.',
+    styling_note: 'Style it well.',
+    product_images: [{ url: '/products/test-blazer.jpg', sort_order: 1 }],
+  },
+]
+
+function mockSupabase() {
+  ;(supabase.from as ReturnType<typeof vi.fn>).mockImplementation((table: string) => {
+    if (table === 'products') {
+      return { select: vi.fn().mockResolvedValue({ data: testProductRows, error: null }) }
+    }
+    const order = vi.fn().mockResolvedValue({
+      data: [
+        { id: '1', slug: 'blazers', label: 'Blazers', sort_order: 1 },
+        { id: '2', slug: 'palazzo', label: 'Palazzo Pants', sort_order: 2 },
+      ],
+      error: null,
+    })
+    const select = vi.fn().mockReturnValue({ order })
+    return { select }
   })
-  const select = vi.fn().mockReturnValue({ order })
-  ;(supabase.from as ReturnType<typeof vi.fn>).mockReturnValue({ select })
 }
 
 describe('CategoryGrid', () => {
   it('links every category to its filtered shop URL', async () => {
-    mockCategories()
+    mockSupabase()
     render(
       <MemoryRouter>
         <CategoryGrid />
@@ -38,5 +61,19 @@ describe('CategoryGrid', () => {
       'href',
       '/shop?category=palazzo',
     )
+  })
+
+  it('renders the cover image for a category from its first product', async () => {
+    mockSupabase()
+    const { container } = render(
+      <MemoryRouter>
+        <CategoryGrid />
+      </MemoryRouter>,
+      { wrapper: QueryWrapper },
+    )
+    await screen.findByRole('link', { name: /blazers/i })
+    await waitFor(() => {
+      expect(container.querySelector('img')).toHaveAttribute('src', '/products/test-blazer.jpg')
+    })
   })
 })
