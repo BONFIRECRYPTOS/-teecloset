@@ -1,10 +1,11 @@
-import { getProductBySlug } from '@/data/products'
+import { useProductsBySlugs } from '@/data/products'
 import { formatKsh } from '@/lib/format'
 import { useCartStore } from '@/lib/cartStore'
 import { buildCartOrderLink } from '@/lib/whatsapp'
 import { buttonClassName } from '@/components/ui/buttonStyles'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { ImageWithFallback } from '@/components/ui/ImageWithFallback'
+import { Skeleton } from '@/components/ui/Skeleton'
 import { cn } from '@/lib/cn'
 
 export function CartDrawer() {
@@ -14,9 +15,12 @@ export function CartDrawer() {
   const removeItem = useCartStore((s) => s.removeItem)
   const updateQuantity = useCartStore((s) => s.updateQuantity)
 
+  const { data: cartProducts, isLoading } = useProductsBySlugs(items.map((item) => item.productSlug))
+  const productBySlug = new Map((cartProducts ?? []).map((p) => [p.slug, p]))
+
   const lines = items
     .map((item) => {
-      const product = getProductBySlug(item.productSlug)
+      const product = productBySlug.get(item.productSlug)
       return product ? { ...item, product } : null
     })
     .filter((line): line is NonNullable<typeof line> => line !== null)
@@ -58,7 +62,19 @@ export function CartDrawer() {
         </div>
 
         <div className="flex-1 overflow-y-auto px-4 py-4">
-          {lines.length === 0 ? (
+          {isLoading && items.length > 0 ? (
+            <ul className="flex flex-col gap-4">
+              {items.map((item) => (
+                <li key={`${item.productSlug}-${item.size}`} className="flex gap-3">
+                  <Skeleton className="h-20 w-16 flex-shrink-0 rounded-md" />
+                  <div className="flex-1 space-y-2">
+                    <Skeleton className="h-4 w-32" />
+                    <Skeleton className="h-3 w-16" />
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : lines.length === 0 ? (
             <EmptyState title="Your cart is empty" description="Add pieces from the shop to build your order." />
           ) : (
             <ul className="flex flex-col gap-4">
@@ -109,7 +125,7 @@ export function CartDrawer() {
           )}
         </div>
 
-        {lines.length > 0 && (
+        {!isLoading && lines.length > 0 && (
           <div className="border-t border-sand px-4 py-4">
             <div className="mb-3 flex items-center justify-between text-sm font-semibold text-espresso">
               <span>Total</span>
