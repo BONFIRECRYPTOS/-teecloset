@@ -33,13 +33,11 @@ export function CategoryGrid() {
                   to={`/shop?category=${category.slug}`}
                   className="group relative aspect-square overflow-hidden rounded-lg bg-sand/40"
                 >
-                  {cover && (
-                    <ImageWithFallback
-                      src={cover}
-                      alt=""
-                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                  )}
+                  <ImageWithFallback
+                    src={cover}
+                    alt=""
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
                   <span className="absolute inset-x-0 bottom-0 bg-espresso/70 px-3 py-2 text-sm font-medium text-ivory">
                     {category.label}
                   </span>

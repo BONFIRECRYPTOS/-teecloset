@@ -32,6 +32,12 @@ function mockSupabaseProducts(rows: (typeof ROW)[] = [ROW]) {
   ;(supabase.from as ReturnType<typeof vi.fn>).mockReturnValue({ select })
 }
 
+function mockSupabaseProductsError() {
+  const inFn = vi.fn().mockResolvedValue({ data: null, error: new Error('network error') })
+  const select = vi.fn().mockReturnValue({ in: inFn })
+  ;(supabase.from as ReturnType<typeof vi.fn>).mockReturnValue({ select })
+}
+
 describe('CartDrawer', () => {
   beforeEach(() => {
     useCartStore.setState({ items: [], isOpen: true })
@@ -99,5 +105,18 @@ describe('CartDrawer', () => {
     render(<CartDrawer />, { wrapper: QueryWrapper })
     await userEvent.click(screen.getByRole('button', { name: /dismiss cart overlay/i }))
     expect(useCartStore.getState().isOpen).toBe(false)
+  })
+
+  it('shows a load-failure message instead of "Your cart is empty" when the fetch fails but the cart has items', async () => {
+    mockSupabaseProductsError()
+    useCartStore.setState({
+      items: [{ productSlug: 'espresso-tailored-blazer', size: 34, quantity: 1 }],
+      isOpen: true,
+    })
+    render(<CartDrawer />, { wrapper: QueryWrapper })
+
+    expect(await screen.findByText(/couldn't load your cart/i)).toBeInTheDocument()
+    expect(screen.queryByText(/your cart is empty/i)).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /order on whatsapp/i })).not.toBeInTheDocument()
   })
 })

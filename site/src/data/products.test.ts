@@ -1,8 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { renderHook, waitFor } from '@testing-library/react'
+import { QueryClientProvider } from '@tanstack/react-query'
+import { createElement, type ReactNode } from 'react'
 import { useProducts, useProductBySlug, useProductsBySlugs, useRelatedProducts } from './products'
 import { supabase } from '@/lib/supabaseClient'
-import { QueryWrapper } from '@/test/queryWrapper'
+import { QueryWrapper, createTestQueryClient } from '@/test/queryWrapper'
 
 vi.mock('@/lib/supabaseClient', () => ({
   supabase: { from: vi.fn() },
@@ -54,6 +56,41 @@ describe('useProducts', () => {
     expect(chainObj.eq).toHaveBeenNthCalledWith(1, 'category', 'blazers')
     expect(chainObj.contains).toHaveBeenCalledWith('sizes', [32])
     expect(chainObj.eq).toHaveBeenNthCalledWith(2, 'availability', 'in-stock')
+  })
+
+  it('sorts results client-side via select without changing the query for different sort values', async () => {
+    const rows = [
+      { ...ROW, id: '1', price_ksh: 1000, is_new: false, is_featured: false },
+      { ...ROW, id: '2', price_ksh: 3000, is_new: true, is_featured: true },
+    ]
+    const resultPromise = Promise.resolve({ data: rows, error: null })
+    const chainObj = {
+      eq: vi.fn().mockReturnThis(),
+      contains: vi.fn().mockReturnThis(),
+      then: (onFulfilled: any) => resultPromise.then(onFulfilled),
+      catch: (onRejected: any) => resultPromise.catch(onRejected),
+    }
+    const select = vi.fn().mockReturnValue(chainObj)
+    ;(supabase.from as ReturnType<typeof vi.fn>).mockReturnValue({ select })
+
+    const queryClient = createTestQueryClient()
+    const wrapper = ({ children }: { children: ReactNode }) =>
+      createElement(QueryClientProvider, { client: queryClient }, children)
+
+    const { result, rerender } = renderHook(
+      ({ sort }: { sort: 'newest' | 'price-asc' }) => useProducts({ sort }),
+      { wrapper, initialProps: { sort: 'newest' } },
+    )
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true))
+    // 'newest' sorts is_new products first.
+    expect(result.current.data!.map((p) => p.id)).toEqual(['2', '1'])
+    expect(supabase.from).toHaveBeenCalledTimes(1)
+
+    // Changing only the sort should re-order the already-fetched data, not trigger a new fetch.
+    rerender({ sort: 'price-asc' })
+    await waitFor(() => expect(result.current.data!.map((p) => p.id)).toEqual(['1', '2']))
+    expect(supabase.from).toHaveBeenCalledTimes(1)
   })
 })
 

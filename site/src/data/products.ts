@@ -15,7 +15,7 @@ interface ProductRow {
   is_featured: boolean
   description: string
   styling_note: string
-  product_images: { url: string; sort_order: number }[]
+  product_images: { url: string; sort_order: number }[] | null
 }
 
 function mapRow(row: ProductRow): Product {
@@ -32,7 +32,7 @@ function mapRow(row: ProductRow): Product {
     isFeatured: row.is_featured,
     description: row.description,
     stylingNote: row.styling_note,
-    images: [...row.product_images]
+    images: [...(row.product_images ?? [])]
       .sort((a, b) => a.sort_order - b.sort_order)
       .map((img) => img.url),
   }
@@ -79,13 +79,16 @@ async function fetchProducts(filters: ProductFilters = {}): Promise<Product[]> {
   const { data, error } = await query
   if (error) throw error
 
-  return sortProducts((data as unknown as ProductRow[]).map(mapRow), filters.sort)
+  return (data as unknown as ProductRow[]).map(mapRow)
 }
 
 export function useProducts(filters: ProductFilters = {}) {
+  const { sort, ...serverFilters } = filters
   return useQuery({
-    queryKey: ['products', filters],
-    queryFn: () => fetchProducts(filters),
+    queryKey: ['products', serverFilters],
+    queryFn: () => fetchProducts(serverFilters),
+    select: (data) => sortProducts(data, sort),
+    staleTime: 5 * 60 * 1000,
   })
 }
 

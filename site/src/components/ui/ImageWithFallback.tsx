@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { cn } from '@/lib/cn'
 
 interface ImageWithFallbackProps {
-  src: string
+  src: string | undefined
   alt: string
   className?: string
 }
@@ -12,7 +12,7 @@ export function ImageWithFallback({ src, alt, className }: ImageWithFallbackProp
 
   useEffect(() => setFailed(false), [src])
 
-  if (failed) {
+  if (failed || !src) {
     const isDecorative = alt === ''
     return (
       <div

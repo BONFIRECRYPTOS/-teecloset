@@ -28,6 +28,11 @@ describe('ImageWithFallback', () => {
     expect(img).toHaveAttribute('src', '/products/real.jpg')
   })
 
+  it('renders the branded placeholder when src is missing, without waiting for an error event', () => {
+    render(<ImageWithFallback src={undefined} alt="A product with no image" />)
+    expect(screen.getByRole('img', { name: 'A product with no image' })).toHaveTextContent('TC')
+  })
+
   it('renders a presentational placeholder (no img role) when alt is empty and the image fails', () => {
     const { container } = render(<ImageWithFallback src="/products/missing.jpg" alt="" />)
     const img = container.querySelector('img')

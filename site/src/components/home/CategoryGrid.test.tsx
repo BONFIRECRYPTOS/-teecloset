@@ -76,4 +76,20 @@ describe('CategoryGrid', () => {
       expect(container.querySelector('img')).toHaveAttribute('src', '/products/test-blazer.jpg')
     })
   })
+
+  it('renders the branded fallback for a category with no products/images instead of a blank tile', async () => {
+    mockSupabase()
+    render(
+      <MemoryRouter>
+        <CategoryGrid />
+      </MemoryRouter>,
+      { wrapper: QueryWrapper },
+    )
+    // 'palazzo' has no matching product in testProductRows, so it has no cover image.
+    const palazzoLink = await screen.findByRole('link', { name: /palazzo pants/i })
+    await waitFor(() => {
+      expect(palazzoLink.querySelector('img')).toBeNull()
+      expect(palazzoLink).toHaveTextContent('TC')
+    })
+  })
 })

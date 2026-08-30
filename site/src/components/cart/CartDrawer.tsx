@@ -15,7 +15,9 @@ export function CartDrawer() {
   const removeItem = useCartStore((s) => s.removeItem)
   const updateQuantity = useCartStore((s) => s.updateQuantity)
 
-  const { data: cartProducts, isLoading } = useProductsBySlugs(items.map((item) => item.productSlug))
+  const { data: cartProducts, isLoading, isError } = useProductsBySlugs(
+    items.map((item) => item.productSlug),
+  )
   const productBySlug = new Map((cartProducts ?? []).map((p) => [p.slug, p]))
 
   const lines = items
@@ -62,7 +64,12 @@ export function CartDrawer() {
         </div>
 
         <div className="flex-1 overflow-y-auto px-4 py-4">
-          {isLoading && items.length > 0 ? (
+          {isError && items.length > 0 ? (
+            <EmptyState
+              title="Couldn't load your cart"
+              description="Something went wrong loading your cart. Please try again."
+            />
+          ) : isLoading && items.length > 0 ? (
             <ul className="flex flex-col gap-4">
               {items.map((item) => (
                 <li key={`${item.productSlug}-${item.size}`} className="flex gap-3">
