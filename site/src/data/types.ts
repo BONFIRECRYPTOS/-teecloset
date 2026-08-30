@@ -1,10 +1,11 @@
-export type Category =
-  | 'wide-leg'
-  | 'blazers'
-  | 'tops'
-  | 'official-pants'
-  | 'chinos'
-  | 'palazzo'
+export type CategorySlug = string
+
+export interface Category {
+  id: string
+  slug: string
+  label: string
+  sortOrder: number
+}
 
 export type Size = 26 | 28 | 30 | 32 | 34 | 36 | 38 | 40
 
@@ -14,7 +15,7 @@ export interface Product {
   id: string
   slug: string
   name: string
-  category: Category
+  category: CategorySlug
   priceKsh: number
   sizes: Size[]
   colors: string[]
@@ -29,7 +30,7 @@ export interface Product {
 export type SortOption = 'newest' | 'price-asc' | 'price-desc' | 'popular'
 
 export interface ProductFilters {
-  category?: Category
+  category?: CategorySlug
   size?: Size
   availability?: Availability
   sort?: SortOption

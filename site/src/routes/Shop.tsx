@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { getProducts } from '@/data/products'
-import type { Category, ProductFilters, Size, SortOption } from '@/data/types'
+import type { CategorySlug, ProductFilters, Size, SortOption } from '@/data/types'
 import { ProductCard } from '@/components/product/ProductCard'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { Button } from '@/components/ui/Button'
@@ -11,7 +11,7 @@ import { ActiveFilterChips } from '@/components/shop/ActiveFilterChips'
 import { Seo } from '@/components/seo/Seo'
 
 function parseFilters(params: URLSearchParams): ProductFilters {
-  const category = params.get('category') as Category | null
+  const category = params.get('category') as CategorySlug | null
   const size = params.get('size')
   const availability = params.get('availability') as ProductFilters['availability'] | null
   const sort = (params.get('sort') as SortOption | null) ?? 'newest'

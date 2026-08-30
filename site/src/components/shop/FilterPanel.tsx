@@ -1,4 +1,4 @@
-import { CATEGORIES } from '@/data/categories'
+import { useCategories } from '@/data/categories'
 import type { Availability, ProductFilters, Size } from '@/data/types'
 import { cn } from '@/lib/cn'
 
@@ -13,6 +13,7 @@ interface FilterPanelProps {
 }
 
 export function FilterPanel({ filters, onChange, isOpen, onClose }: FilterPanelProps) {
+  const { data: categories } = useCategories()
   return (
     <aside
       className={cn(
@@ -31,7 +32,7 @@ export function FilterPanel({ filters, onChange, isOpen, onClose }: FilterPanelP
         <div>
           <p className="text-xs font-semibold uppercase tracking-wider text-fg-muted">Category</p>
           <div className="mt-2 flex flex-col gap-1">
-            {CATEGORIES.map((category) => (
+            {(categories ?? []).map((category) => (
               <label key={category.slug} className="flex items-center gap-2 text-sm text-espresso">
                 <input
                   type="radio"

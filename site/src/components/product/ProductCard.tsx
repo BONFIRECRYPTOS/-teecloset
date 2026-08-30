@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import type { Product } from '@/data/types'
 import { formatKsh } from '@/lib/format'
-import { getCategoryLabel } from '@/data/categories'
+import { useCategories, getCategoryLabel } from '@/data/categories'
 import { buildWhatsAppOrderLink } from '@/lib/whatsapp'
 import { Badge } from '@/components/ui/Badge'
 import { ImageWithFallback } from '@/components/ui/ImageWithFallback'
@@ -10,6 +10,7 @@ import { AvailabilityBadge } from './AvailabilityBadge'
 import { WishlistButton } from './WishlistButton'
 
 export function ProductCard({ product }: { product: Product }) {
+  const { data: categories } = useCategories()
   const productUrl =
     typeof window !== 'undefined'
       ? `${window.location.origin}/product/${product.slug}`
@@ -33,7 +34,7 @@ export function ProductCard({ product }: { product: Product }) {
         <div className="mt-2 flex items-start justify-between gap-2">
           <div>
             <p className="text-sm font-medium text-espresso">{product.name}</p>
-            <p className="text-xs text-fg-muted">{getCategoryLabel(product.category)}</p>
+            <p className="text-xs text-fg-muted">{getCategoryLabel(categories ?? [], product.category)}</p>
           </div>
           <p className="text-sm font-semibold text-espresso">{formatKsh(product.priceKsh)}</p>
         </div>

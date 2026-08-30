@@ -1,14 +1,15 @@
 import { Link } from 'react-router-dom'
-import { CATEGORIES } from '@/data/categories'
+import { useCategories } from '@/data/categories'
 import { getProducts } from '@/data/products'
 import { ImageWithFallback } from '@/components/ui/ImageWithFallback'
 
 export function CategoryGrid() {
+  const { data: categories } = useCategories()
   return (
     <section className="mx-auto max-w-6xl px-4 py-12">
       <h2 className="font-display text-2xl text-espresso">Shop by Category</h2>
       <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-3">
-        {CATEGORIES.map((category) => {
+        {(categories ?? []).map((category) => {
           const cover = getProducts({ category: category.slug })[0]?.images[0]
           return (
             <Link

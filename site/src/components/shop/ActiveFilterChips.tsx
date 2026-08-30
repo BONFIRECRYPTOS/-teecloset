@@ -1,4 +1,4 @@
-import { getCategoryLabel } from '@/data/categories'
+import { useCategories, getCategoryLabel } from '@/data/categories'
 import type { ProductFilters } from '@/data/types'
 
 interface ActiveFilterChipsProps {
@@ -7,8 +7,9 @@ interface ActiveFilterChipsProps {
 }
 
 export function ActiveFilterChips({ filters, onRemove }: ActiveFilterChipsProps) {
+  const { data: categories } = useCategories()
   const chips: { key: keyof ProductFilters; label: string }[] = []
-  if (filters.category) chips.push({ key: 'category', label: getCategoryLabel(filters.category) })
+  if (filters.category) chips.push({ key: 'category', label: getCategoryLabel(categories ?? [], filters.category) })
   if (filters.size) chips.push({ key: 'size', label: `Size ${filters.size}` })
   if (filters.availability) chips.push({ key: 'availability', label: filters.availability.replace('-', ' ') })
 

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { getProductBySlug, getRelatedProducts } from '@/data/products'
-import { getCategoryLabel } from '@/data/categories'
+import { useCategories, getCategoryLabel } from '@/data/categories'
 import { formatKsh } from '@/lib/format'
 import { buildWhatsAppOrderLink } from '@/lib/whatsapp'
 import type { Size } from '@/data/types'
@@ -19,6 +19,7 @@ import { NotFound } from './NotFound'
 export function ProductDetail() {
   const { slug } = useParams<{ slug: string }>()
   const product = slug ? getProductBySlug(slug) : undefined
+  const { data: categories } = useCategories()
   const [selectedSize, setSelectedSize] = useState<Size | undefined>()
 
   if (!product) return <NotFound />
@@ -56,7 +57,9 @@ export function ProductDetail() {
         <ProductGallery images={product.images} alt={product.name} />
 
         <div>
-          <p className="text-xs uppercase tracking-wider text-fg-muted">{getCategoryLabel(product.category)}</p>
+          <p className="text-xs uppercase tracking-wider text-fg-muted">
+            {getCategoryLabel(categories ?? [], product.category)}
+          </p>
           <h1 className="mt-1 font-display text-3xl text-espresso">{product.name}</h1>
           <p className="mt-2 text-xl font-semibold text-espresso">{formatKsh(product.priceKsh)}</p>
 
