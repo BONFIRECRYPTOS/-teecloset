@@ -102,6 +102,11 @@ describe('useProducts', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
     expect(result.current.data![0].images).toEqual(['/b1.jpg', '/b2.jpg'])
     expect(result.current.data![0].category).toBe('blazers')
+
+    // Verify filter methods were called with correct arguments
+    expect(chainObj.eq).toHaveBeenNthCalledWith(1, 'category', 'blazers')
+    expect(chainObj.contains).toHaveBeenCalledWith('sizes', [32])
+    expect(chainObj.eq).toHaveBeenNthCalledWith(2, 'availability', 'in-stock')
   })
 })
 
@@ -120,6 +125,9 @@ describe('useProductBySlug', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
     expect(result.current.data?.slug).toBe('espresso-tailored-blazer')
+
+    // Verify eq was called with the correct slug
+    expect(eq).toHaveBeenCalledWith('slug', 'espresso-tailored-blazer')
   })
 
   it('does not query when slug is undefined', () => {
