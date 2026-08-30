@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { getProductBySlug, getRelatedProducts } from '@/data/products'
+import { useProductBySlug, useRelatedProducts } from '@/data/products'
 import { useCategories, getCategoryLabel } from '@/data/categories'
 import { formatKsh } from '@/lib/format'
 import { buildWhatsAppOrderLink } from '@/lib/whatsapp'
@@ -12,19 +12,36 @@ import { WishlistButton } from '@/components/product/WishlistButton'
 import { ProductCard } from '@/components/product/ProductCard'
 import { AddToCartButton } from '@/components/cart/AddToCartButton'
 import { Button } from '@/components/ui/Button'
+import { Skeleton } from '@/components/ui/Skeleton'
 import { buttonClassName } from '@/components/ui/buttonStyles'
 import { Seo } from '@/components/seo/Seo'
 import { NotFound } from './NotFound'
 
 export function ProductDetail() {
   const { slug } = useParams<{ slug: string }>()
-  const product = slug ? getProductBySlug(slug) : undefined
+  const { data: product, isLoading, isError } = useProductBySlug(slug)
   const { data: categories } = useCategories()
+  const { data: related } = useRelatedProducts(product)
   const [selectedSize, setSelectedSize] = useState<Size | undefined>()
 
-  if (!product) return <NotFound />
+  if (isLoading) {
+    return (
+      <div className="mx-auto max-w-6xl px-4 py-10">
+        <div className="grid gap-10 md:grid-cols-2">
+          <Skeleton className="aspect-[3/4] w-full" />
+          <div className="space-y-4">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-8 w-2/3" />
+            <Skeleton className="h-6 w-32" />
+            <Skeleton className="h-24 w-full" />
+          </div>
+        </div>
+      </div>
+    )
+  }
 
-  const related = getRelatedProducts(product)
+  if (isError || !product) return <NotFound />
+
   const pageUrl = typeof window !== 'undefined' ? window.location.href : `/product/${product.slug}`
   const whatsAppLink = buildWhatsAppOrderLink(product, pageUrl, selectedSize)
   const isOrderable = product.availability !== 'sold'
@@ -115,7 +132,7 @@ export function ProductDetail() {
         </div>
       </div>
 
-      {related.length > 0 && (
+      {related && related.length > 0 && (
         <section className="mt-16">
           <h2 className="font-display text-2xl text-espresso">You Might Also Like</h2>
           <div className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
