@@ -73,4 +73,16 @@ describe('useAuthSession', () => {
     await waitFor(() => expect(result.current.isLoading).toBe(false))
     expect(result.current.session).toBeNull()
   })
+
+  it('stops loading and leaves session null when getSession rejects', async () => {
+    ;(supabase.auth.getSession as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('Network error'))
+    ;(supabase.auth.onAuthStateChange as ReturnType<typeof vi.fn>).mockReturnValue({
+      data: { subscription: { unsubscribe: vi.fn() } },
+    })
+
+    const { result } = renderHook(() => useAuthSession())
+
+    await waitFor(() => expect(result.current.isLoading).toBe(false))
+    expect(result.current.session).toBeNull()
+  })
 })

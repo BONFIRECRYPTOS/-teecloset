@@ -17,10 +17,15 @@ export function useAuthSession() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session)
-      setIsLoading(false)
-    })
+    supabase.auth.getSession().then(
+      ({ data }) => {
+        setSession(data.session)
+        setIsLoading(false)
+      },
+      () => {
+        setIsLoading(false)
+      },
+    )
 
     const {
       data: { subscription },
