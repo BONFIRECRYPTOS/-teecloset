@@ -13,7 +13,6 @@ export function AdminProductForm() {
   const createProduct = useCreateProduct()
   const updateProduct = useUpdateProduct()
   const [submitError, setSubmitError] = useState<string | null>(null)
-  const [createdId, setCreatedId] = useState<string | null>(null)
 
   async function handleSubmit(input: ProductInput) {
     setSubmitError(null)
@@ -23,7 +22,7 @@ export function AdminProductForm() {
         navigate('/admin')
       } else {
         const created = await createProduct.mutateAsync(input)
-        setCreatedId(created.id)
+        navigate(`/admin/products/${created.id}/edit`, { replace: true })
       }
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : 'Failed to save product.')
@@ -37,8 +36,6 @@ export function AdminProductForm() {
   if (isEditMode && !existingProduct) {
     return <p className="text-red-400">Product not found.</p>
   }
-
-  const activeProductId = isEditMode ? id! : createdId
 
   return (
     <div>
@@ -57,16 +54,10 @@ export function AdminProductForm() {
         </p>
       )}
 
-      {activeProductId ? (
-        <ProductImageManager productId={activeProductId} />
+      {id ? (
+        <ProductImageManager productId={id} />
       ) : (
         <p className="mt-6 text-sm text-sand">Save the product first to add photos.</p>
-      )}
-
-      {!isEditMode && createdId && (
-        <button type="button" onClick={() => navigate('/admin')} className="mt-6 text-champagne underline">
-          Done — back to dashboard
-        </button>
       )}
     </div>
   )

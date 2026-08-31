@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { supabase } from '@/lib/supabaseClient'
 import { QueryWrapper } from '@/test/queryWrapper'
@@ -16,11 +16,12 @@ function mockSupabase(overrides?: {
   onUpdate?: () => { error: Error | null }
   onDeleteCount?: number
 }) {
+  const insertSpy = vi.fn().mockResolvedValue(overrides?.onInsert?.() ?? { error: null })
   ;(supabase.from as ReturnType<typeof vi.fn>).mockImplementation((table: string) => {
     if (table === 'categories') {
       return {
         select: vi.fn().mockReturnValue({ order: vi.fn().mockResolvedValue({ data: [CATEGORY_ROW], error: null }) }),
-        insert: vi.fn().mockResolvedValue(overrides?.onInsert?.() ?? { error: null }),
+        insert: insertSpy,
         update: vi.fn().mockReturnValue({ eq: vi.fn().mockResolvedValue(overrides?.onUpdate?.() ?? { error: null }) }),
         delete: vi.fn().mockReturnValue({ eq: vi.fn().mockResolvedValue({ error: null }) }),
       }
@@ -29,6 +30,7 @@ function mockSupabase(overrides?: {
       select: vi.fn().mockReturnValue({ eq: vi.fn().mockResolvedValue({ count: overrides?.onDeleteCount ?? 0, error: null }) }),
     }
   })
+  return { insertSpy }
 }
 
 function renderManager() {
@@ -45,14 +47,29 @@ describe('AdminCategoryManager', () => {
   })
 
   it('adds a new category', async () => {
-    mockSupabase()
+    const { insertSpy } = mockSupabase()
     renderManager()
     await screen.findByText('Blazers')
 
     await userEvent.type(screen.getByLabelText(/new category name/i), 'Jackets')
     await userEvent.click(screen.getByRole('button', { name: /^add$/i }))
 
-    expect(supabase.from).toHaveBeenCalledWith('categories')
+    await waitFor(() => {
+      expect(insertSpy).toHaveBeenCalledWith({ slug: 'jackets', label: 'Jackets', sort_order: 1 })
+    })
+  })
+
+  it('shows an inline error when adding a category fails', async () => {
+    mockSupabase({ onInsert: () => ({ error: new Error('duplicate key value violates unique constraint') }) })
+    renderManager()
+    await screen.findByText('Blazers')
+
+    await userEvent.type(screen.getByLabelText(/new category name/i), 'Jackets')
+    await userEvent.click(screen.getByRole('button', { name: /^add$/i }))
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      /duplicate key value violates unique constraint/i,
+    )
   })
 
   it('renames a category', async () => {

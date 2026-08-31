@@ -375,6 +375,33 @@ describe('useUploadProductImage', () => {
       expect.objectContaining({ product_id: 'p1', url: 'https://cdn/products/p1/x.jpg', sort_order: 0 }),
     )
   })
+
+  it('invalidates product-images, products, product, and product-by-id caches', async () => {
+    const upload = vi.fn().mockResolvedValue({ error: null })
+    const getPublicUrl = vi.fn().mockReturnValue({ data: { publicUrl: 'https://cdn/products/p1/x.jpg' } })
+    const insert = vi.fn().mockResolvedValue({ error: null })
+    ;(supabase.storage as unknown as { from: ReturnType<typeof vi.fn> }) = {
+      from: vi.fn().mockReturnValue({ upload, getPublicUrl }),
+    } as never
+    ;(supabase.from as ReturnType<typeof vi.fn>).mockReturnValue({ insert })
+
+    const queryClient = createTestQueryClient()
+    const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries')
+    const wrapper = ({ children }: { children: ReactNode }) =>
+      createElement(QueryClientProvider, { client: queryClient }, children)
+
+    const { result } = renderHook(() => useUploadProductImage(), { wrapper })
+    const file = new File(['data'], 'photo.jpg', { type: 'image/jpeg' })
+
+    await act(async () => {
+      await result.current.mutateAsync({ productId: 'p1', file, sortOrder: 0 })
+    })
+
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['product-images', 'p1'] })
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['products'] })
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['product'] })
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['product-by-id', 'p1'] })
+  })
 })
 
 describe('useDeleteProductImage', () => {
@@ -392,6 +419,28 @@ describe('useDeleteProductImage', () => {
     })
 
     expect(eq).toHaveBeenCalledWith('id', 'img1')
+  })
+
+  it('invalidates product-images, products, product, and product-by-id caches', async () => {
+    const eq = vi.fn().mockResolvedValue({ error: null })
+    const del = vi.fn().mockReturnValue({ eq })
+    ;(supabase.from as ReturnType<typeof vi.fn>).mockReturnValue({ delete: del })
+
+    const queryClient = createTestQueryClient()
+    const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries')
+    const wrapper = ({ children }: { children: ReactNode }) =>
+      createElement(QueryClientProvider, { client: queryClient }, children)
+
+    const { result } = renderHook(() => useDeleteProductImage(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({ imageId: 'img1', productId: 'p1' })
+    })
+
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['product-images', 'p1'] })
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['products'] })
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['product'] })
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['product-by-id', 'p1'] })
   })
 })
 
@@ -413,5 +462,27 @@ describe('useReorderProductImages', () => {
     expect(eq).toHaveBeenNthCalledWith(1, 'id', 'img2')
     expect(update).toHaveBeenNthCalledWith(2, { sort_order: 1 })
     expect(eq).toHaveBeenNthCalledWith(2, 'id', 'img1')
+  })
+
+  it('invalidates product-images, products, product, and product-by-id caches', async () => {
+    const eq = vi.fn().mockResolvedValue({ error: null })
+    const update = vi.fn().mockReturnValue({ eq })
+    ;(supabase.from as ReturnType<typeof vi.fn>).mockReturnValue({ update })
+
+    const queryClient = createTestQueryClient()
+    const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries')
+    const wrapper = ({ children }: { children: ReactNode }) =>
+      createElement(QueryClientProvider, { client: queryClient }, children)
+
+    const { result } = renderHook(() => useReorderProductImages(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({ productId: 'p1', orderedIds: ['img2', 'img1'] })
+    })
+
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['product-images', 'p1'] })
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['products'] })
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['product'] })
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['product-by-id', 'p1'] })
   })
 })

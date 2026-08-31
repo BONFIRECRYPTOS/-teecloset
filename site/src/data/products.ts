@@ -288,6 +288,9 @@ export function useUploadProductImage() {
     },
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['product-images', variables.productId] })
+      queryClient.invalidateQueries({ queryKey: ['products'] })
+      queryClient.invalidateQueries({ queryKey: ['product'] })
+      queryClient.invalidateQueries({ queryKey: ['product-by-id', variables.productId] })
     },
   })
 }
@@ -301,6 +304,9 @@ export function useDeleteProductImage() {
     },
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['product-images', variables.productId] })
+      queryClient.invalidateQueries({ queryKey: ['products'] })
+      queryClient.invalidateQueries({ queryKey: ['product'] })
+      queryClient.invalidateQueries({ queryKey: ['product-by-id', variables.productId] })
     },
   })
 }
@@ -319,6 +325,9 @@ export function useReorderProductImages() {
     },
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['product-images', variables.productId] })
+      queryClient.invalidateQueries({ queryKey: ['products'] })
+      queryClient.invalidateQueries({ queryKey: ['product'] })
+      queryClient.invalidateQueries({ queryKey: ['product-by-id', variables.productId] })
     },
   })
 }

@@ -49,8 +49,9 @@ function renderAt(path: string) {
 describe('AdminProductForm — create mode', () => {
   beforeEach(() => vi.clearAllMocks())
 
-  it('creates a product, then shows the image manager and a Done link instead of navigating away', async () => {
+  it('creates a product, then navigates to the edit URL and shows edit-mode UI for the new product', async () => {
     mockCategoriesAndEmptyImages()
+    let productsSelectCallCount = 0
     ;(supabase.from as ReturnType<typeof vi.fn>).mockImplementation((table: string) => {
       if (table === 'categories') {
         return {
@@ -64,9 +65,36 @@ describe('AdminProductForm — create mode', () => {
       }
       if (table === 'products') {
         return {
-          select: vi
-            .fn()
-            .mockReturnValue({ eq: vi.fn().mockReturnValue({ maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }) }) }),
+          select: vi.fn().mockReturnValue({
+            eq: vi.fn().mockReturnValue({
+              maybeSingle: vi.fn().mockImplementation(() => {
+                productsSelectCallCount += 1
+                // First select is the unique-slug check (no existing product); once the product
+                // has been "created", subsequent selects are the post-create useProductById fetch.
+                if (productsSelectCallCount === 1) {
+                  return Promise.resolve({ data: null, error: null })
+                }
+                return Promise.resolve({
+                  data: {
+                    id: 'p1',
+                    slug: 'test-blazer',
+                    name: 'Test Blazer',
+                    category: 'blazers',
+                    price_ksh: 3000,
+                    sizes: [32],
+                    colors: [],
+                    availability: 'in-stock',
+                    is_new: false,
+                    is_featured: false,
+                    description: '',
+                    styling_note: '',
+                    product_images: [],
+                  },
+                  error: null,
+                })
+              }),
+            }),
+          }),
           insert: vi.fn().mockReturnValue({
             select: vi.fn().mockReturnValue({
               single: vi.fn().mockResolvedValue({ data: { id: 'p1', slug: 'test-blazer' }, error: null }),
@@ -89,11 +117,12 @@ describe('AdminProductForm — create mode', () => {
     await userEvent.click(screen.getByLabelText('32'))
     await userEvent.click(screen.getByRole('button', { name: /create product/i }))
 
-    expect(await screen.findByText(/done — back to dashboard/i)).toBeInTheDocument()
+    // After a successful create, the component should be in edit mode for the newly
+    // created product (submit label flips to "Save Changes"), not stuck on the create
+    // page with local "createdId" state.
+    expect(await screen.findByRole('button', { name: /save changes/i })).toBeInTheDocument()
     expect(screen.queryByText(/save the product first/i)).not.toBeInTheDocument()
-
-    await userEvent.click(screen.getByText(/done — back to dashboard/i))
-    expect(await screen.findByText('Dashboard Page')).toBeInTheDocument()
+    expect(screen.queryByText(/done — back to dashboard/i)).not.toBeInTheDocument()
   })
 })
 
