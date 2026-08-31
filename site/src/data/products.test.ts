@@ -251,6 +251,27 @@ describe('useUpdateProduct', () => {
     expect(update.mock.calls[0][0]).not.toHaveProperty('slug')
     expect(eq).toHaveBeenCalledWith('id', 'p1')
   })
+
+  it('invalidates the product-by-id cache entry for the updated id', async () => {
+    const eq = vi.fn().mockResolvedValue({ error: null })
+    const update = vi.fn().mockReturnValue({ eq })
+    ;(supabase.from as ReturnType<typeof vi.fn>).mockReturnValue({ update })
+
+    const queryClient = createTestQueryClient()
+    const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries')
+    const wrapper = ({ children }: { children: ReactNode }) =>
+      createElement(QueryClientProvider, { client: queryClient }, children)
+
+    const { result } = renderHook(() => useUpdateProduct(), { wrapper })
+
+    await act(async () => {
+      await result.current.mutateAsync({ id: 'p1', ...PRODUCT_INPUT })
+    })
+
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['products'] })
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['product'] })
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['product-by-id', 'p1'] })
+  })
 })
 
 describe('useDeleteProduct', () => {

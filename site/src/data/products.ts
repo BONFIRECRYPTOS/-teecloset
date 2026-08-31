@@ -215,9 +215,10 @@ export function useUpdateProduct() {
         .eq('id', id)
       if (error) throw error
     },
-    onSuccess: () => {
+    onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['products'] })
       queryClient.invalidateQueries({ queryKey: ['product'] })
+      queryClient.invalidateQueries({ queryKey: ['product-by-id', variables.id] })
     },
   })
 }
