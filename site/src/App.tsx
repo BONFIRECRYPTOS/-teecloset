@@ -8,6 +8,7 @@ import { AdminRouteGuard } from '@/components/admin/AdminRouteGuard'
 import { AdminLayout } from '@/components/admin/AdminLayout'
 import { AdminLogin } from '@/routes/admin/AdminLogin'
 import { AdminDashboard } from '@/routes/admin/AdminDashboard'
+import { AdminProductForm } from '@/routes/admin/AdminProductForm'
 
 export function App() {
   return (
@@ -29,6 +30,8 @@ export function App() {
         }
       >
         <Route index element={<AdminDashboard />} />
+        <Route path="products/new" element={<AdminProductForm />} />
+        <Route path="products/:id/edit" element={<AdminProductForm />} />
       </Route>
     </Routes>
   )
